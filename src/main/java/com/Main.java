@@ -5,6 +5,7 @@ import com.bean.Person;
 import com.jvm.DiyClassLoader;
 import com.jvm.DiyClassLoader002;
 import com.jvm.DiyClassLoader003;
+import com.jvm.DiyClassLoader004;
 import org.omg.PortableServer.THREAD_POLICY_ID;
 import sun.dc.path.PathError;
 
@@ -13,6 +14,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Main {
+    static{
+        Thread.currentThread().setContextClassLoader(new DiyClassLoader004());
+    }
     public static void main(String[] args) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         show(classLoader.toString());
@@ -23,34 +27,31 @@ public class Main {
 
     }
 
-    //成功了
+    //测试自定义ClassLoader003
+    // 成功了
     private static void testDiyClassLoader003() {
+
         DiyClassLoader003 cl1 = new DiyClassLoader003();
-        //磁盘中/home/im/Desktop/Hello.class文件存在
+
+        show("getSystemClassLoader:"+DiyClassLoader003.getSystemClassLoader());
         try {
-            Class c1 = cl1.loadClass("Person");
-            testClassLoader(c1);
-            Object object = c1.newInstance();
+            Class aClass = cl1.loadClass("Person");
+
+            //show("isInstance:" + aClass.isInstance(new Person()));
+            //show("isAssignableFrom:" + aClass.isAssignableFrom(Person.class));
+            testClassLoader(aClass);
+            Object object = aClass.newInstance();
             show(object.toString());
             show("object instanceof Person = " + (object instanceof Person));
 
-            Method method = c1.getDeclaredMethod("show");
+            Method method = aClass.getDeclaredMethod("show");
             method.setAccessible(true);
             method.invoke(object);
 
             Person person = new Person();
             person.show();
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("main-ClassNotFoundException");
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+            //show("person.equals(object):" + person.equals(object));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

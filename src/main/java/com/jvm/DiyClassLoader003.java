@@ -2,13 +2,15 @@ package com.jvm;
 
 import java.io.*;
 
+//自定义ClassLoader003
 public class DiyClassLoader003 extends ClassLoader {
     static {
-        System.out.println("MyClassLoader");
+        System.out.println("static DiyClassLoader003");
     }
 
-    public static final String driver = "D:\\Study\\JavaWod\\JvmDemo\\test\\";
-    public static final String fileTyep = ".class";
+    //public static final String driver = "test\\";
+    public static final String driver = "target\\classes\\com\\bean\\";
+    public static final String fileType = ".class";
 
     public Class findClass(String name) {
         show("name:" + name);
@@ -21,7 +23,7 @@ public class DiyClassLoader003 extends ClassLoader {
         FileInputStream fis = null;
         byte[] data = null;
         try {
-            File file = new File(driver + name + fileTyep);
+            File file = new File(driver + name + fileType);
             show(file.getAbsolutePath());
             fis = new FileInputStream(file);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
